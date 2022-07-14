@@ -1,4 +1,5 @@
-﻿using VideoLibrary;
+﻿using System.Linq;
+using VideoLibrary;
 
 namespace YoutubeDownloader
 {
@@ -14,7 +15,10 @@ namespace YoutubeDownloader
 
                 try
                 {
-                    YouTubeVideo? video = youTube.GetVideo(link); // gets a Video object with info about the video
+                    Task<IEnumerable<YouTubeVideo>>? t = youTube.GetAllVideosAsync(link); // gets a Video object with info about the video
+                    t.Wait();
+                    IEnumerable<YouTubeVideo>? videos = t.Result;
+                    YouTubeVideo? video = videos.OrderByDescending(x => x.Resolution).First();
                     Console.WriteLine("Stahuju: " + video.FullName);
                     Stream s = video.Stream();
                     using (var fs = File.Create(video.FullName))
