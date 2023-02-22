@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using YoutubeExplode;
@@ -17,8 +18,8 @@ namespace YoutubeDownloader
                 Console.WriteLine("Zadej adresu videa");
                 string? link = Console.ReadLine();
                 //string? link = "https://www.youtube.com/watch?v=egkqDwQuh8E";
-                var k = Uri.TryCreate(link, UriKind.Absolute, out var link2);
-                if (!k) return;
+                var validUri = Uri.TryCreate(link, UriKind.Absolute, out var link2);
+                if (!validUri) return;
 
                 YoutubeClient client = new();
                 Video video = client.Videos.GetAsync(link2.ToString()).Result;
@@ -34,6 +35,10 @@ namespace YoutubeDownloader
                 {
                     Console.Write("\r" + (x * 100).ToString("N2") + " % z " + velikost / 1024 + " MB");
                 });
+
+                if (!ExistsOnPath("ffmpeg")) return;
+
+
                 var t = Task.Run(async () =>
                 {
                     await client.Videos.DownloadAsync(mixedStreams, new ConversionRequestBuilder($"video.{nejlepsiVideo.Container}").Build(),p);
@@ -43,6 +48,26 @@ namespace YoutubeDownloader
 
                 Console.WriteLine("\nStazeno");
 
+            }
+        }
+
+        public static bool ExistsOnPath(string exeName)
+        {
+            try
+            {
+                using (Process p = new Process())
+                {
+                    p.StartInfo.UseShellExecute = false;
+                    p.StartInfo.FileName = "where";
+                    p.StartInfo.Arguments = exeName;
+                    p.Start();
+                    p.WaitForExit();
+                    return p.ExitCode == 0;
+                }
+            }
+            catch (Win32Exception)
+            {
+                throw new Exception("'where' command is not on path");
             }
         }
     }
