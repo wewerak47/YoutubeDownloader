@@ -1,5 +1,10 @@
-﻿using System.Linq;
-using VideoLibrary;
+﻿using System;
+using System.Diagnostics;
+using System.Linq;
+using YoutubeExplode;
+using YoutubeExplode.Converter;
+using YoutubeExplode.Videos;
+using YoutubeExplode.Videos.Streams;
 
 namespace YoutubeDownloader
 {
@@ -11,37 +16,33 @@ namespace YoutubeDownloader
             {
                 Console.WriteLine("Zadej adresu videa");
                 string? link = Console.ReadLine();
-                YouTube? youTube = YouTube.Default; // starting point for YouTube actions
+                //string? link = "https://www.youtube.com/watch?v=egkqDwQuh8E";
+                var k = Uri.TryCreate(link, UriKind.Absolute, out var link2);
+                if (!k) return;
 
-                try
+                YoutubeClient client = new();
+                Video video = client.Videos.GetAsync(link2.ToString()).Result;
+                StreamManifest streamManifest = client.Videos.Streams.GetManifestAsync(link2.ToString()).Result;
+                List<IVideoStreamInfo> vsechnyVidea = streamManifest.GetVideoStreams().ToList();
+                List<IAudioStreamInfo> vsechnyAudia = streamManifest.GetAudioStreams().ToList();
+                IVideoStreamInfo nejlepsiVideo = streamManifest.GetVideoOnlyStreams().GetWithHighestVideoQuality();
+                IStreamInfo nejlepsiAudio = streamManifest.GetAudioOnlyStreams().GetWithHighestBitrate();
+                IStreamInfo[] mixedStreams = new IStreamInfo[] { nejlepsiVideo, nejlepsiAudio };
+
+                var velikost = mixedStreams.Select(x => x.Size.KiloBytes).Sum();
+                var p = new Progress<double>(x =>
                 {
-                    Task<IEnumerable<YouTubeVideo>>? t = youTube.GetAllVideosAsync(link); // gets a Video object with info about the video
-                    t.Wait();
-                    IEnumerable<YouTubeVideo>? videos = t.Result;
-                    YouTubeVideo? video = videos.OrderByDescending(x => x.Resolution).First();
-                    Console.WriteLine("Stahuju: " + video.FullName);
-                    Stream s = video.Stream();
-                    using (var fs = File.Create(video.FullName))
-                    {
-                        int count = 0;
-                        byte[] buffer = new byte[16 * 1024];
-                        int read;
-                        while ((read = s.Read(buffer, 0, buffer.Length)) > 0)
-                        {
-                            fs.Write(buffer, 0, read);
-                            count = (count + read);
-                            double progress = (double)(count / (double)video.ContentLength) * 100; 
-                            //progress = Math.Round(progress, 2);
-                            Console.Write("\r" + progress.ToString("N2") + " % z " + video.ContentLength / 1024 + " KB");
-                        }
-                    }
-                }
-                catch (Exception e)
+                    Console.Write("\r" + (x * 100).ToString("N2") + " % z " + velikost / 1024 + " MB");
+                });
+                var t = Task.Run(async () =>
                 {
-                    Console.WriteLine("Neco se stalo");
-                    Console.Write(e.Message);
-                }
+                    await client.Videos.DownloadAsync(mixedStreams, new ConversionRequestBuilder($"video.{nejlepsiVideo.Container}").Build(),p);
+                });
+                t.Wait();
+
+
                 Console.WriteLine("\nStazeno");
+
             }
         }
     }
