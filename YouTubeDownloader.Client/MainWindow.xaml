@@ -1,0 +1,42 @@
+﻿<Window x:Class="YouTubeDownloader.Client.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:YouTubeDownloader.Client"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <StackPanel
+            VerticalAlignment="Top" Orientation="Vertical">
+            <DockPanel LastChildFill="True" HorizontalAlignment="Center">
+                <TextBox x:Name="SemnapisURL_TextBox" TextChanged="SemnapisURL_TextChanged" Width="500" Margin="0 0 10 0" VerticalContentAlignment="Center" />
+                <Border x:Name="ValidaceCervenePole" BorderBrush="Red" BorderThickness="20" Width="30" Height="30" />
+            </DockPanel>
+            <Button x:Name="Najdi_varianty" Content="Nacti Info" Click="Najdi_varianty_Click"  />
+            <Grid MinHeight="100">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+                <ListView Grid.Column="0" x:Name="kvalita_videa"  SelectionMode="Single">
+                    
+                </ListView>
+                <ListView Grid.Column="1" x:Name="kvalita_zvuku"  SelectionMode="Single">
+                    
+                </ListView>
+            </Grid>
+            <Button x:Name="FindVideoFileButton" Content="Stahni" Click="FindVideoFileButton_Click"  />
+            <DockPanel LastChildFill="True" HorizontalAlignment="Center">
+                <TextBox x:Name="CestaKSouboru" Width="500" Margin="0 0 10 0" VerticalContentAlignment="Center" />
+                <Button Content="Vyber Cestu" Click="Button_Click" />
+            </DockPanel>            
+        </StackPanel>
+    </Grid>
+</Window>

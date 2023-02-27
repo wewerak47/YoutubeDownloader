@@ -19,13 +19,13 @@ namespace YoutubeDownloader
                 string? link = Console.ReadLine();
                 //string? link = "https://www.youtube.com/watch?v=egkqDwQuh8E";
                 var validUri = Uri.TryCreate(link, UriKind.Absolute, out var link2);
-                if (!validUri) return;
+                if (!validUri) continue;
 
                 YoutubeClient client = new();
-                Video video = client.Videos.GetAsync(link2.ToString()).Result;
+                Video video = client.Videos.GetAsync(link2!.ToString()).Result;
                 StreamManifest streamManifest = client.Videos.Streams.GetManifestAsync(link2.ToString()).Result;
-                List<IVideoStreamInfo> vsechnyVidea = streamManifest.GetVideoStreams().ToList();
-                List<IAudioStreamInfo> vsechnyAudia = streamManifest.GetAudioStreams().ToList();
+                List<VideoOnlyStreamInfo> vsechnyVidea = streamManifest.GetVideoOnlyStreams().ToList();
+                List<AudioOnlyStreamInfo> vsechnyAudia = streamManifest.GetAudioOnlyStreams().ToList();
                 IVideoStreamInfo nejlepsiVideo = streamManifest.GetVideoOnlyStreams().GetWithHighestVideoQuality();
                 IStreamInfo nejlepsiAudio = streamManifest.GetAudioOnlyStreams().GetWithHighestBitrate();
                 IStreamInfo[] mixedStreams = new IStreamInfo[] { nejlepsiVideo, nejlepsiAudio };
@@ -33,15 +33,14 @@ namespace YoutubeDownloader
                 var velikost = mixedStreams.Select(x => x.Size.KiloBytes).Sum();
                 var p = new Progress<double>(x =>
                 {
-                    Console.Write("\r" + (x * 100).ToString("N2") + " % z " + velikost / 1024 + " MB");
+                    Console.Write("\r" + (x * 100).ToString("N2") + " % z " + (velikost / 1024).ToString("N2") + " MB");
                 });
 
-                if (!ExistsOnPath("ffmpeg")) return;
-
+                if (!ExistsOnPath("ffmpeg")) continue;
 
                 var t = Task.Run(async () =>
                 {
-                    await client.Videos.DownloadAsync(mixedStreams, new ConversionRequestBuilder($"video.{nejlepsiVideo.Container}").Build(),p);
+                    await client.Videos.DownloadAsync(mixedStreams, new ConversionRequestBuilder($"video.{nejlepsiVideo.Container}").Build(), p);
                 });
                 t.Wait();
 
