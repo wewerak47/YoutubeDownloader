@@ -7,6 +7,9 @@
         mc:Ignorable="d"
         Title="MainWindow" Width="1024">
     <Grid>
+        <Grid.Effect>
+            <DropShadowEffect/>
+        </Grid.Effect>
         <Grid.ColumnDefinitions>
             <ColumnDefinition />
         </Grid.ColumnDefinitions>
@@ -14,29 +17,62 @@
             <RowDefinition />
         </Grid.RowDefinitions>
         <Border BorderBrush="Gray" BorderThickness="25" CornerRadius="15" Margin="10" Background="LightGray">
+            <Border.Effect>
+                <DropShadowEffect/>
+            </Border.Effect>
             <StackPanel
-            VerticalAlignment="Top" Orientation="Vertical" Background="LightGray">
-            <TextBox TextAlignment="Center" FontSize="25" FontWeight="UltraBlack" Width="350" Padding="5" Margin="15">Jůtůb Daunloudr</TextBox>
+            VerticalAlignment="Top" Orientation="Vertical" Background="LightGray" Cursor="Cross">
+            <TextBox TextAlignment="Center" FontSize="25" FontWeight="UltraBlack" Width="350" Padding="5" Margin="15" BorderBrush="Black" Cursor="None">Jůtůb Daunloudr</TextBox>
                 <DockPanel LastChildFill="True" HorizontalAlignment="Center">
                     <TextBox x:Name="SemnapisURL_TextBox" TextChanged="SemnapisURL_TextChanged" Width="500" Margin="0 0 15 0" VerticalContentAlignment="Center" />
-                    <Border x:Name="ValidaceCervenePole" BorderBrush="Red" BorderThickness="20" Width="30" Height="30"/>
+                    <Border x:Name="ValidaceCervenePole" BorderBrush="Red" BorderThickness="5" Width="30" Height="30" CornerRadius="15">
+                        <Border.Effect>
+                            <BlurEffect/>
+                        </Border.Effect>
+                    </Border>
                 </DockPanel>
-                <Button x:Name="Najdi_varianty" Content="Po stisknutí si vyber kvalitu videa" Click="Najdi_varianty_Click" Width="250" Margin="10" FontSize="15"/>
+                <Button x:Name="Najdi_varianty" Content="Po stisknutí si vyber kvalitu videa" Click="Najdi_varianty_Click" Width="250" Margin="10" FontSize="15">
+                    <Button.Effect>
+                        <DropShadowEffect/>
+                    </Button.Effect>
+                </Button>
                 <Border BorderBrush="Gray" BorderThickness="5" CornerRadius="15" Margin=" 25 10 25 20">
-                <Grid MinHeight="100">
+                    <Border.Effect>
+                        <DropShadowEffect/>
+                    </Border.Effect>
+                    <Grid MinHeight="100">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition />
                         <ColumnDefinition />
                     </Grid.ColumnDefinitions>
-                    <ListView Grid.Column="0" x:Name="kvalita_videa"  SelectionMode="Single" Background="Gray" Margin="25"/>
-                    <ListView Grid.Column="1" x:Name="kvalita_zvuku"  SelectionMode="Single" Background="Gray" Margin="25" />
-                </Grid>
+                    <ListView Grid.Column="0" x:Name="kvalita_videa"  SelectionMode="Single" Background="Gray" Margin="25">
+                            <ListView.Effect>
+                                <DropShadowEffect/>
+                            </ListView.Effect>
+                        </ListView>
+                        <ListView Grid.Column="1" x:Name="kvalita_zvuku"  SelectionMode="Single" Background="Gray" Margin="25" >
+                            <ListView.Effect>
+                                <DropShadowEffect/>
+                            </ListView.Effect>
+                        </ListView>
+                    </Grid>
             </Border>
             <DockPanel LastChildFill="True" HorizontalAlignment="Center">
-                <TextBox x:Name="CestaKSouboru" Width="500" Margin="0 0 10 0" VerticalContentAlignment="Center" />
-                <Button Content="Zvol umístění" Click="Button_Click" Width="150" Margin="5" />
-                <Button x:Name="FindVideoFileButton" Content="Stáhni video" Click="FindVideoFileButton_Click" Margin="5" Width="150"/>
-            </DockPanel>
+                    <DockPanel.Effect>
+                        <DropShadowEffect/>
+                    </DockPanel.Effect>
+                    <TextBox x:Name="CestaKSouboru" Width="500" Margin="0 0 10 0" VerticalContentAlignment="Center" />
+                <Button Content="Zvol umístění" Click="Button_Click" Width="150" Margin="5" >
+                        <Button.Effect>
+                            <DropShadowEffect/>
+                        </Button.Effect>
+                    </Button>
+                    <Button x:Name="FindVideoFileButton" Content="Stáhni video" Click="FindVideoFileButton_Click" Margin="5" Width="150">
+                        <Button.Effect>
+                            <DropShadowEffect/>
+                        </Button.Effect>
+                    </Button>
+                </DockPanel>
         </StackPanel>
         </Border>
     </Grid>
