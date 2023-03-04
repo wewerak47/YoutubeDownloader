@@ -17,6 +17,7 @@ using YoutubeExplode.Videos;
 using YoutubeExplode;
 using YoutubeExplode.Converter;
 using Microsoft.Win32;
+using System.Diagnostics;
 
 namespace YouTubeDownloader.Client
 {
@@ -90,7 +91,13 @@ namespace YouTubeDownloader.Client
             //IStreamInfo nejlepsiAudio = streamManifest.GetAudioOnlyStreams().GetWithHighestBitrate();
             IStreamInfo[] mixedStreams = new IStreamInfo[] { vybranyVideo, vybranyAudio };
             
-            await client.Videos.DownloadAsync(mixedStreams, new ConversionRequestBuilder(this.CestaKSouboru.Text).Build());
+            var velikost = mixedStreams.Select(x => x.Size.KiloBytes).Sum();
+            var p = new Progress<double>(x =>
+            {
+                //Debug.Write("\r" + (x * 100).ToString("N2") + " % z " + (velikost / 1024).ToString("N2") + " MB");
+                this.DownloadProgress.Value = x*100;
+            });
+            await client.Videos.DownloadAsync(mixedStreams, new ConversionRequestBuilder(this.CestaKSouboru.Text).Build(),p);
         }
 
         private async void Najdi_varianty_Click(object sender, RoutedEventArgs e)

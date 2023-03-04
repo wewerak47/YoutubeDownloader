@@ -3,6 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:system="clr-namespace:System;assembly=mscorlib"
         xmlns:local="clr-namespace:YouTubeDownloader.Client"
         mc:Ignorable="d"
         Title="MainWindow" Width="1024">
@@ -22,7 +23,7 @@
             </Border.Effect>
             <StackPanel
             VerticalAlignment="Top" Orientation="Vertical" Background="LightGray" Cursor="Cross">
-            <TextBox TextAlignment="Center" FontSize="25" FontWeight="UltraBlack" Width="350" Padding="5" Margin="15" BorderBrush="Black" Cursor="None">Jůtůb Daunloudr</TextBox>
+                <TextBlock HorizontalAlignment="Stretch" TextAlignment="Center" FontSize="25" FontWeight="UltraBlack" Width="350" Padding="5" Margin="015" Cursor="None">Jůtůb Daunloudr</TextBlock>
                 <DockPanel LastChildFill="True" HorizontalAlignment="Center">
                     <TextBox x:Name="SemnapisURL_TextBox" TextChanged="SemnapisURL_TextChanged" Width="500" Margin="0 0 15 0" VerticalContentAlignment="Center" />
                     <Border x:Name="ValidaceCervenePole" BorderBrush="Red" BorderThickness="5" Width="30" Height="30" CornerRadius="15">
@@ -36,33 +37,47 @@
                         <DropShadowEffect/>
                     </Button.Effect>
                 </Button>
-                <Border BorderBrush="Gray" BorderThickness="5" CornerRadius="15" Margin=" 25 10 25 20">
+                <Border BorderBrush="Gray" BorderThickness="5" CornerRadius="15" Margin="25 10 25 20">
                     <Border.Effect>
                         <DropShadowEffect/>
                     </Border.Effect>
                     <Grid MinHeight="100">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition />
-                        <ColumnDefinition />
-                    </Grid.ColumnDefinitions>
-                    <ListView Grid.Column="0" x:Name="kvalita_videa"  SelectionMode="Single" Background="Gray" Margin="25">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition />
+                            <ColumnDefinition />
+                        </Grid.ColumnDefinitions>
+                        <ListView Grid.Column="0" x:Name="kvalita_videa"  SelectionMode="Single" Background="Gray" Margin="25">
+                            <d:ListView.ItemsSource>
+                                <x:Array Type="{x:Type system:String}">
+                                    <system:String>asd1</system:String>
+                                    <system:String>asd2</system:String>
+                                    <system:String>asd3</system:String>
+                                </x:Array>
+                            </d:ListView.ItemsSource>
                             <ListView.Effect>
                                 <DropShadowEffect/>
                             </ListView.Effect>
                         </ListView>
                         <ListView Grid.Column="1" x:Name="kvalita_zvuku"  SelectionMode="Single" Background="Gray" Margin="25" >
+                            <d:ListView.ItemsSource>
+                                <x:Array Type="{x:Type system:String}">
+                                    <system:String>asd1</system:String>
+                                    <system:String>asd2</system:String>
+                                    <system:String>asd3</system:String>
+                                </x:Array>
+                            </d:ListView.ItemsSource>
                             <ListView.Effect>
                                 <DropShadowEffect/>
                             </ListView.Effect>
                         </ListView>
                     </Grid>
-            </Border>
-            <DockPanel LastChildFill="True" HorizontalAlignment="Center">
+                </Border>
+                <DockPanel LastChildFill="True" HorizontalAlignment="Center">
                     <DockPanel.Effect>
                         <DropShadowEffect/>
                     </DockPanel.Effect>
                     <TextBox x:Name="CestaKSouboru" Width="500" Margin="0 0 10 0" VerticalContentAlignment="Center" />
-                <Button Content="Zvol umístění" Click="Button_Click" Width="150" Margin="5" >
+                    <Button Content="Zvol umístění" Click="Button_Click" Width="150" Margin="5" >
                         <Button.Effect>
                             <DropShadowEffect/>
                         </Button.Effect>
@@ -73,7 +88,10 @@
                         </Button.Effect>
                     </Button>
                 </DockPanel>
-        </StackPanel>
+                <ProgressBar x:Name="DownloadProgress" Height="20" Margin="25 10 25 20" Foreground="LimeGreen" d:Value="50" Background="Red"  >
+                    
+                </ProgressBar>
+            </StackPanel>
         </Border>
     </Grid>
 </Window>
