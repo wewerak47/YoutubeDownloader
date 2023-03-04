@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:system="clr-namespace:System;assembly=mscorlib"
         xmlns:local="clr-namespace:YouTubeDownloader.Client"
+        xmlns:MD="http://materialdesigninxaml.net/winfx/xaml/themes"
         mc:Ignorable="d"
         Title="MainWindow" Width="1024">
     <Grid>
@@ -22,8 +23,8 @@
                 <DropShadowEffect/>
             </Border.Effect>
             <StackPanel
-            VerticalAlignment="Top" Orientation="Vertical" Background="LightGray" Cursor="Cross">
-                <TextBlock HorizontalAlignment="Stretch" TextAlignment="Center" FontSize="25" FontWeight="UltraBlack" Width="350" Padding="5" Margin="015" Cursor="None">Jůtůb Daunloudr</TextBlock>
+            VerticalAlignment="Top" Orientation="Vertical" Background="LightGray" >
+                <TextBlock HorizontalAlignment="Stretch" TextAlignment="Center" FontSize="25" FontWeight="UltraBlack" Width="350" Padding="5" Margin="015">Jůtůb Daunloudr</TextBlock>
                 <DockPanel LastChildFill="True" HorizontalAlignment="Center">
                     <TextBox x:Name="SemnapisURL_TextBox" TextChanged="SemnapisURL_TextChanged" Width="500" Margin="0 0 15 0" VerticalContentAlignment="Center" />
                     <Border x:Name="ValidaceCervenePole" BorderBrush="Red" BorderThickness="5" Width="30" Height="30" CornerRadius="15">
@@ -32,21 +33,31 @@
                         </Border.Effect>
                     </Border>
                 </DockPanel>
-                <Button x:Name="Najdi_varianty" Content="Po stisknutí si vyber kvalitu videa" Click="Najdi_varianty_Click" Width="250" Margin="10" FontSize="15">
-                    <Button.Effect>
+                <Button x:Name="Najdi_varianty" Content="Po stisknutí si vyber kvalitu videa" Click="Najdi_varianty_Click" Width="250" Margin="10">
+                    <!--<Button.Effect>
                         <DropShadowEffect/>
-                    </Button.Effect>
+                    </Button.Effect>-->
                 </Button>
+                <DockPanel HorizontalAlignment="Center" Visibility="Collapsed">
+                    <Label Content="MultiSelect" VerticalAlignment="Center" FontSize="15" />
+                    <ToggleButton x:Name="MultiSelectToggleButton" d:IsChecked="False"  VerticalAlignment="Center" Height="30" Width="60" Margin="10 0 0 0" IsChecked="{Binding MultiSelectEnabled, Mode=TwoWay, NotifyOnSourceUpdated=True, NotifyOnTargetUpdated=True}" >
+                        <ToggleButton.Style>
+                            <Style TargetType="ToggleButton" BasedOn="{StaticResource MaterialDesignSwitchLightToggleButton}">
+                                
+                            </Style>
+                        </ToggleButton.Style>
+                    </ToggleButton>
+                </DockPanel>
                 <Border BorderBrush="Gray" BorderThickness="5" CornerRadius="15" Margin="25 10 25 20">
                     <Border.Effect>
                         <DropShadowEffect/>
                     </Border.Effect>
-                    <Grid MinHeight="100">
+                    <Grid MinHeight="300" MaxHeight="400">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition />
                             <ColumnDefinition />
                         </Grid.ColumnDefinitions>
-                        <ListView Grid.Column="0" x:Name="kvalita_videa"  SelectionMode="Single" Background="Gray" Margin="25">
+                        <ListView Grid.Column="0" x:Name="kvalita_videa"  SelectionMode="{Binding MultiSelectMode, Mode=OneWay, NotifyOnSourceUpdated=True, NotifyOnTargetUpdated=True, UpdateSourceTrigger=PropertyChanged}" Background="Gray" Margin="25">
                             <d:ListView.ItemsSource>
                                 <x:Array Type="{x:Type system:String}">
                                     <system:String>asd1</system:String>
@@ -58,7 +69,7 @@
                                 <DropShadowEffect/>
                             </ListView.Effect>
                         </ListView>
-                        <ListView Grid.Column="1" x:Name="kvalita_zvuku"  SelectionMode="Single" Background="Gray" Margin="25" >
+                        <ListView Grid.Column="1" x:Name="kvalita_zvuku"  SelectionMode="{Binding MultiSelectMode, Mode=OneWay, NotifyOnSourceUpdated=True, NotifyOnTargetUpdated=True, UpdateSourceTrigger=PropertyChanged}" Background="Gray" Margin="25" >
                             <d:ListView.ItemsSource>
                                 <x:Array Type="{x:Type system:String}">
                                     <system:String>asd1</system:String>
@@ -89,7 +100,7 @@
                     </Button>
                 </DockPanel>
                 <ProgressBar x:Name="DownloadProgress" Height="20" Margin="25 10 25 20" Foreground="LimeGreen" d:Value="50" Background="Red"  >
-                    
+
                 </ProgressBar>
             </StackPanel>
         </Border>

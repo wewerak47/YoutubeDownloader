@@ -29,10 +29,39 @@ namespace YouTubeDownloader.Client
         public MainWindow()
         {
             InitializeComponent();
+            this.DataContext = this;
         }
 
         bool ValidniUrl;
         string NazevVidea = "video";
+        private bool multiSelectEnabled = false;
+        private SelectionMode multiSelectMode;
+
+        public bool MultiSelectEnabled
+        {
+            get => multiSelectEnabled;
+            set
+            {
+                multiSelectEnabled = value;
+                this.MultiSelectMode = value ? SelectionMode.Multiple : SelectionMode.Single;
+            }
+        }
+        public SelectionMode MultiSelectMode
+        {
+            get => multiSelectMode;
+            set
+            {
+                multiSelectMode = value;
+                if (value == SelectionMode.Single)
+                {
+                    this.kvalita_videa.SelectedItems.Clear();
+                    this.kvalita_zvuku.SelectedItems.Clear();
+                }
+                this.kvalita_videa.SelectionMode = value;
+                this.kvalita_zvuku.SelectionMode = value;
+
+            }
+        }
 
         private void SemnapisURL_TextChanged(object sender, TextChangedEventArgs e)
         {
@@ -44,6 +73,7 @@ namespace YouTubeDownloader.Client
                 {
                     this.ValidaceCervenePole.BorderBrush = Brushes.Green;
                     this.ValidniUrl = true;
+                    NajdiVarianty();
                 }
                 else
                 {
@@ -81,38 +111,54 @@ namespace YouTubeDownloader.Client
                 MessageBox.Show("neznam cestu k souboru");
                 return;
             }
-                YoutubeClient client = new();
-            var vybranyVideo = kvalita_videa.SelectedItem as VideoOnlyStreamInfo;
-            var vybranyAudio = kvalita_zvuku.SelectedItem as AudioOnlyStreamInfo;
-            //StreamManifest streamManifest = await client.Videos.Streams.GetManifestAsync(link2.ToString());
-            //List<VideoOnlyStreamInfo> vsechnyVidea = streamManifest.GetVideoOnlyStreams().ToList();
-            //List<AudioOnlyStreamInfo> vsechnyAudia = streamManifest.GetAudioOnlyStreams().ToList();
-            //IVideoStreamInfo nejlepsiVideo = streamManifest.GetVideoOnlyStreams().GetWithHighestVideoQuality();
-            //IStreamInfo nejlepsiAudio = streamManifest.GetAudioOnlyStreams().GetWithHighestBitrate();
-            IStreamInfo[] mixedStreams = new IStreamInfo[] { vybranyVideo, vybranyAudio };
-            
+            YoutubeClient client = new();
+            IStreamInfo[] mixedStreams;
+            if (this.MultiSelectMode == SelectionMode.Single)
+            {
+                var vybranyVideo = kvalita_videa.SelectedItem as VideoOnlyStreamInfo;
+                var vybranyAudio = kvalita_zvuku.SelectedItem as AudioOnlyStreamInfo;
+                mixedStreams = new IStreamInfo[] { vybranyVideo, vybranyAudio };
+            }
+            else
+            {
+                var vybranyVidea = kvalita_videa.SelectedItems.Cast<VideoOnlyStreamInfo>().ToList();
+                var vybranyZvuky = kvalita_zvuku.SelectedItems.Cast<AudioOnlyStreamInfo>().ToList();
+                int streamCount = vybranyVidea.Count + vybranyZvuky.Count;
+                mixedStreams = new IStreamInfo[] { vybranyVidea[0], vybranyZvuky[0], vybranyZvuky[1] };
+            }
+
+
             var velikost = mixedStreams.Select(x => x.Size.KiloBytes).Sum();
             var p = new Progress<double>(x =>
             {
                 //Debug.Write("\r" + (x * 100).ToString("N2") + " % z " + (velikost / 1024).ToString("N2") + " MB");
-                this.DownloadProgress.Value = x*100;
+                this.DownloadProgress.Value = x * 100;
             });
-            await client.Videos.DownloadAsync(mixedStreams, new ConversionRequestBuilder(this.CestaKSouboru.Text).Build(),p);
+            await client.Videos.DownloadAsync(mixedStreams, new ConversionRequestBuilder(this.CestaKSouboru.Text).Build(), p);
         }
 
         private async void Najdi_varianty_Click(object sender, RoutedEventArgs e)
         {
             if (!this.ValidniUrl) return;
+            NajdiVarianty();
+        }
+        private async void NajdiVarianty()
+        {
             string link = SemnapisURL_TextBox.Text;
             YoutubeClient client = new YoutubeClient();
-            var video = await client.Videos.GetAsync(link);
-            this.NazevVidea = video.Title;
+            try
+            {
+                var video = await client.Videos.GetAsync(link);
+                this.NazevVidea = video.Title;
+            }
+            catch (Exception) { return; }
             var listStrymu = await client.Videos.Streams.GetManifestAsync(link);
             var listvidea = listStrymu.GetVideoOnlyStreams().ToList();
             var listaudio = listStrymu.GetAudioOnlyStreams().ToList();
             kvalita_videa.ItemsSource = listvidea;
             kvalita_zvuku.ItemsSource = listaudio;
-
+            kvalita_videa.SelectedItem = listvidea.GetWithHighestVideoQuality();
+            kvalita_zvuku.SelectedItem = listaudio.TryGetWithHighestBitrate();
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
@@ -121,6 +167,7 @@ namespace YouTubeDownloader.Client
             openFileDialog.CheckPathExists = true;
             openFileDialog.DefaultExt = ".mp4";
             openFileDialog.Filter = "Video | *.mp4";
+            openFileDialog.FileName = this.NazevVidea;
             openFileDialog.ShowDialog();
             this.CestaKSouboru.Text = openFileDialog.FileName;
         }
