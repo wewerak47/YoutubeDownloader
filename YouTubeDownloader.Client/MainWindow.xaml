@@ -38,7 +38,7 @@
                         <DropShadowEffect/>
                     </Button.Effect>-->
                 </Button>
-                <DockPanel HorizontalAlignment="Center" Visibility="Collapsed">
+                <DockPanel HorizontalAlignment="Center" Visibility="Visible">
                     <Label Content="MultiSelect" VerticalAlignment="Center" FontSize="15" />
                     <ToggleButton x:Name="MultiSelectToggleButton" d:IsChecked="False"  VerticalAlignment="Center" Height="30" Width="60" Margin="10 0 0 0" IsChecked="{Binding MultiSelectEnabled, Mode=TwoWay, NotifyOnSourceUpdated=True, NotifyOnTargetUpdated=True}" >
                         <ToggleButton.Style>

@@ -5,7 +5,11 @@ VisualStudioVersion = 17.3.32505.426
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "YoutubeDownloader", "YoutubeDownloader\YoutubeDownloader.csproj", "{CB6CABDD-DA4B-41E6-A17A-E8972BC7155B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YouTubeDownloader.Client", "YouTubeDownloader.Client\YouTubeDownloader.Client.csproj", "{838A9471-28FB-43D7-83BA-F1E42AAB937F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "YouTubeDownloader.Client", "YouTubeDownloader.Client\YouTubeDownloader.Client.csproj", "{838A9471-28FB-43D7-83BA-F1E42AAB937F}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "YoutubeExplode.Converter", "..\YoutubeExplode\YoutubeExplode.Converter\YoutubeExplode.Converter.csproj", "{FEDC631D-6BFF-4669-B648-E64E3AD18680}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "YoutubeExplode", "..\YoutubeExplode\YoutubeExplode\YoutubeExplode.csproj", "{5D113056-172D-4558-B3D5-491C6322377D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +25,14 @@ Global
 		{838A9471-28FB-43D7-83BA-F1E42AAB937F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{838A9471-28FB-43D7-83BA-F1E42AAB937F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{838A9471-28FB-43D7-83BA-F1E42AAB937F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FEDC631D-6BFF-4669-B648-E64E3AD18680}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FEDC631D-6BFF-4669-B648-E64E3AD18680}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FEDC631D-6BFF-4669-B648-E64E3AD18680}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FEDC631D-6BFF-4669-B648-E64E3AD18680}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5D113056-172D-4558-B3D5-491C6322377D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5D113056-172D-4558-B3D5-491C6322377D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5D113056-172D-4558-B3D5-491C6322377D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5D113056-172D-4558-B3D5-491C6322377D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

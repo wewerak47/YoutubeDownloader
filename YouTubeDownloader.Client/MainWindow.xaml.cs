@@ -124,9 +124,18 @@ namespace YouTubeDownloader.Client
                 var vybranyVidea = kvalita_videa.SelectedItems.Cast<VideoOnlyStreamInfo>().ToList();
                 var vybranyZvuky = kvalita_zvuku.SelectedItems.Cast<AudioOnlyStreamInfo>().ToList();
                 int streamCount = vybranyVidea.Count + vybranyZvuky.Count;
-                mixedStreams = new IStreamInfo[] { vybranyVidea[0], vybranyZvuky[0], vybranyZvuky[1] };
-            }
+                mixedStreams = new IStreamInfo[streamCount];
 
+                for (int i = 0; i < vybranyVidea.Count; i++)
+                {
+                    mixedStreams[i] = vybranyVidea[i];
+                    //mixedStreams.Append(vybranyVidea[i]);
+                }
+                for (int i = 0; i < vybranyZvuky.Count; i++)
+                {
+                    mixedStreams[vybranyVidea.Count + i] = vybranyZvuky[i];
+                }
+            }
 
             var velikost = mixedStreams.Select(x => x.Size.KiloBytes).Sum();
             var p = new Progress<double>(x =>
@@ -134,7 +143,14 @@ namespace YouTubeDownloader.Client
                 //Debug.Write("\r" + (x * 100).ToString("N2") + " % z " + (velikost / 1024).ToString("N2") + " MB");
                 this.DownloadProgress.Value = x * 100;
             });
-            await client.Videos.DownloadAsync(mixedStreams, new ConversionRequestBuilder(this.CestaKSouboru.Text).Build(), p);
+            try
+            {
+                await client.Videos.DownloadAsync(mixedStreams, new ConversionRequestBuilder(this.CestaKSouboru.Text).Build(), p);
+            }
+            catch(Exception ex)
+            {
+
+            }
         }
 
         private async void Najdi_varianty_Click(object sender, RoutedEventArgs e)

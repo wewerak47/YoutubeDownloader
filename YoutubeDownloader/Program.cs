@@ -3,9 +3,11 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using YoutubeExplode;
+using YoutubeExplode.Playlists;
 using YoutubeExplode.Converter;
 using YoutubeExplode.Videos;
 using YoutubeExplode.Videos.Streams;
+using YoutubeExplode.Common;
 
 namespace YoutubeDownloader
 {
@@ -13,7 +15,26 @@ namespace YoutubeDownloader
     {
         static void Main(string[] args)
         {
-            while (true)
+            // playlisty
+            while(true)
+            {
+                Console.WriteLine("Zadej adresu videa");
+                string? link = Console.ReadLine();
+                var validUri = Uri.TryCreate(link, UriKind.Absolute, out var link2);
+                if (!validUri) continue;
+
+                YoutubeClient client = new();
+                Playlist playlistInfo = client.Playlists.GetAsync(link2.ToString()).Result;
+                IReadOnlyList<PlaylistVideo> playlistVideos = client.Playlists.GetVideosAsync(link2.ToString()).GetAwaiter().GetResult();
+                foreach (var item in playlistVideos)
+                {
+                    var t = client.Videos.DownloadAsync(item.Url, item.Title.Replace('/',' ').Replace('\\',' ').Replace('?',' ') + ".mp4");
+                    t.AsTask().Wait();
+                }
+            }
+            // videa
+            
+            while (false)
             {
                 Console.WriteLine("Zadej adresu videa");
                 string? link = Console.ReadLine();

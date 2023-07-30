@@ -8,8 +8,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="YoutubeExplode" Version="6.2.6" />
-    <PackageReference Include="YoutubeExplode.Converter" Version="6.2.6" />
+    <ProjectReference Include="..\..\YoutubeExplode\YoutubeExplode.Converter\YoutubeExplode.Converter.csproj" />
+    <ProjectReference Include="..\..\YoutubeExplode\YoutubeExplode\YoutubeExplode.csproj" />
   </ItemGroup>
 
 </Project>
